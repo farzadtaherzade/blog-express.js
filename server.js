@@ -54,10 +54,15 @@ class Server {
   }
   configureRoutes() {
     const authRoutes = require("./routes/auth");
+    const ArticleRoutes = require("./routes/article");
     const userRoutes = require("./routes/user");
 
+    // User Routes
     this.#app.use("/v1/users/auth", authRoutes);
     this.#app.use("/v1/users/", userRoutes);
+
+    // Blog Routes
+    this.#app.use("/v1/article/", ArticleRoutes);
   }
   start(port) {
     this.#app.listen(port, () => {

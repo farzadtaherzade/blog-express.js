@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 const { UserModel } = require("../models/user");
 
 function registerValidator() {
@@ -21,7 +21,7 @@ function registerValidator() {
         console.log("email");
         return true;
       }),
-    body("password").isEmpty().withMessage("Password can't be empty"),
+    body("password").notEmpty().withMessage("Password can't be empty"),
   ];
 }
 function loginValidator() {
