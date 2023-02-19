@@ -5,7 +5,9 @@ const { checkLogin } = require("../middleware/userLogin");
 const upload = require("../uttils/multer");
 
 router.get("/", articleValidator(), ArticleController.getAllArticle);
+
 router.get("/:slug", articleValidator(), ArticleController.getArticle);
+
 router.put(
   "/:slug",
   checkLogin,
@@ -13,17 +15,31 @@ router.put(
   articleValidator(),
   ArticleController.editArticle
 );
+
 router.delete(
   "/delete-article/:slug",
   checkLogin,
   ArticleController.removeArticle
 );
+
 router.post(
   "/create-article",
   checkLogin,
   upload.single("cover"),
   articleValidator(),
   ArticleController.createArticle
+);
+
+router.post(
+  "/like-article/:slug",
+  checkLogin,
+  ArticleController.addLikeArticle
+);
+
+router.delete(
+  "/like-article/:slug",
+  checkLogin,
+  ArticleController.removeLikeArticle
 );
 
 module.exports = router;

@@ -120,6 +120,45 @@ class ArticleController {
       next(error);
     }
   }
+  async addLikeArticle(req, res, next) {
+    try {
+      const id = req.user._id;
+      const slug = req?.params?.slug;
+
+      const article = await ArticleModel.findOneAndUpdate(
+        { slug },
+        { $set: { likes: id } }
+      );
+      if (article.modifiedCount == 0)
+        throw { status: 400, message: "Adding like have problem!" };
+      return res.status(200).json({
+        status: "success",
+        message: "Your like successfully added",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async removeLikeArticle(req, res, next) {
+    try {
+      const slug = req?.params?.slug;
+      const userId = req.user._id;
+      const article = await ArticleModel.findOne({ slug });
+      if (!article) throw { status: 404, message: "Article not found!" };
+
+      const userLikeId = article.likes.findIndex((id) => id == userId);
+      if (!userLikeId) throw { status: 404, message: "User Like not found!" };
+      await article.likes.slice(userLikeId, 1);
+      await article.save();
+
+      res.status(200).json({
+        status: "sucess",
+        message: "Your like delted",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = {
