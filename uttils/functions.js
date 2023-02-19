@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const { UserModel } = require("../models/user");
 exports.hashString = (str) => {
   const salt = bcrypt.genSaltSync(10);
@@ -22,4 +24,12 @@ exports.isAdmin = async (req) => {
   const role = user.role;
   if (role && role == "admin") return true;
   return false;
+};
+
+exports.unlinkCover = async (filename) => {
+  const pathFile = path.join(__dirname, "..", "public", "v1", filename);
+  fs.unlink(pathFile, (err) => {
+    if (err) throw err;
+  });
+  console.log();
 };
